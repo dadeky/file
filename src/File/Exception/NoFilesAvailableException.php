@@ -1,7 +1,7 @@
 <?php
 namespace File\Exception;
 
-use Ddd\Exception\DomainException;
+use Dadeky\Ddd\Exception\DomainException;
 
 class NoFilesAvailableException extends DomainException
 {
