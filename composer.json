@@ -1,0 +1,33 @@
+{
+  "name": "dadeky/file",
+  "description": "Library for file manipulation.",
+  "authors": [
+    {
+      "name": "Darko Dvorski",
+      "email": "dadeky@gmail.com",
+      "role": "Developer"
+    }
+  ],
+  "homepage": "https://github.com/dadeky/file",
+  "license": "BSD-2-Clause",
+  "keywords": [
+    "file"
+  ],
+  "config": {
+    "sort-packages": true
+  },
+  "require": {
+    "php": ">=5.5",
+    "doctrine/orm": "^2.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "File\\": "src/File"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "File\\Tests\\": "tests/File/Tests"
+    }
+  }
+}
