@@ -39,7 +39,7 @@ class DirectoryCrawlerService {
 				closedir($handle);
 				$this->filesFound = $filesArr;
 			}else{
-				throw new UnableToOpenDirException('Unable to open dir '.$path);
+				throw new UnableToOpenDirException($path);
 			}
 		}
 			
