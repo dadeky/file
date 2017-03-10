@@ -1,6 +1,8 @@
 <?php
 namespace File\Exception;
 
+use Ddd\Exception\DomainException;
+
 class UnableToOpenDirException extends DomainException{
 	
 	private $defaultMessage = 'Unable to open directory: %1$s';
