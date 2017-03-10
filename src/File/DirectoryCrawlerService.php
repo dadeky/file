@@ -1,6 +1,5 @@
 <?php
-
-namespace Ppa\Infrastructure\Service\File;
+namespace File;
 
 use File\Exception\UnableToOpenDirException;
 
