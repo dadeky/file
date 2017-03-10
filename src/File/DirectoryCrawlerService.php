@@ -2,7 +2,7 @@
 
 namespace Ppa\Infrastructure\Service\File;
 
-use Ppa\Infrastructure\Service\File\Exception\UnableToOpenDirException;
+use File\Exception\UnableToOpenDirException;
 
 class DirectoryCrawlerService {
 	
