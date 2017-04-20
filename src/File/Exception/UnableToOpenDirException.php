@@ -1,7 +1,7 @@
 <?php
 namespace File\Exception;
 
-use Dadeky\Ddd\Exception\DomainException;
+use Dadeky\Ddd\Domain\Exception\DomainException;
 
 class UnableToOpenDirException extends DomainException{
 	
