@@ -25,6 +25,7 @@ class ParserService {
 		if(count($files) > 0){
 			foreach($files as $file){
 				
+			    $extension = strtolower($extension);
 				switch ($extension){
 				    
 				    case 'xml':
