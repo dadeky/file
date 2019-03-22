@@ -63,6 +63,7 @@ class ParserService {
 				        }
 				        break;
 				}
+				fclose($fd);
 			}
 		}
 		return $objects;
