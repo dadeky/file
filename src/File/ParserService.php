@@ -6,6 +6,8 @@ use File\Exception\MappingDtoDoesNotExistException;
 
 class ParserService {
 	
+    const DEFAULT_DELIMITER = ";";
+    
 	private $incomingFolder;
 	
 	public function __construct(
@@ -18,7 +20,8 @@ class ParserService {
 	    $extension=false, 
 	    $limit=null, 
 	    $sort=null,
-	    MappingDtoInterface $mappingDto=null
+	    MappingDtoInterface $mappingDto=null,
+	    $delimiter=self::DEFAULT_DELIMITER
 	){
 		$objects = [];
 		$files = (new DirectoryCrawlerService())->directoryContent($this->incomingFolder, $extension, $limit, $sort);
@@ -45,7 +48,7 @@ class ParserService {
 				                $line =fgets($fd,500);
 				                if (!empty($line))
 				                {
-				                    $lineDataArray = explode(";",rtrim($line));
+				                    $lineDataArray = explode($delimiter,rtrim($line));
 				                    if(count($lineDataArray) > 0){
 				                        $object = clone $mappingDto;
 				                        foreach ($lineDataArray as $key => $value)
