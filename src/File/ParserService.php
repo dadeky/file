@@ -5,8 +5,6 @@ use File\Exception\UnableToOpenFileException;
 use File\Exception\MappingDtoDoesNotExistException;
 
 class ParserService {
-	
-    const DEFAULT_DELIMITER = ";";
     
 	private $incomingFolder;
 	
@@ -21,7 +19,7 @@ class ParserService {
 	    $limit=null, 
 	    $sort=null,
 	    MappingDtoInterface $mappingDto=null,
-	    $delimiter=self::DEFAULT_DELIMITER
+	    $delimiter=CsvParser::DEFAULT_DELIMITER
 	){
 		$objects = [];
 		$files = (new DirectoryCrawlerService())->directoryContent($this->incomingFolder, $extension, $limit, $sort);
@@ -44,25 +42,11 @@ class ParserService {
 				        if(!$fd) {
 				            throw new UnableToOpenFileException($file);
 				        }else{
+				            $lines = [];
 				            while(!feof($fd)){
-				                $line =fgets($fd,500);
-				                if (!empty($line))
-				                {
-				                    $lineDataArray = explode($delimiter,rtrim($line));
-				                    if(count($lineDataArray) > 0){
-				                        $object = clone $mappingDto;
-				                        foreach ($lineDataArray as $key => $value)
-				                        {
-				                            $methodName = $mappingDto->getMappingSetter($key);
-				                            if (method_exists($object, $methodName))
-				                            {
-				                                $object->{ $methodName }($value);
-				                            }
-				                        }
-				                        $objects[$file][] = $object;
-				                    }
-				                }
+				                $lines[] = fgets($fd,500);
 				            }
+				            $objects[$file] = (new CsvParser())->parse($lines, $mappingDto, $delimiter);
 				        }
 				        fclose($fd);
 				        break;
