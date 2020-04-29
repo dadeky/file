@@ -9,17 +9,17 @@ class ParserService {
 	private $incomingFolder;
 	
 	public function __construct(
-			$incomingFolder
+        $incomingFolder
 	){
 		$this->incomingFolder = $incomingFolder;
 	}
 	
 	public function parse(
-	    $extension=false, 
-	    $limit=null, 
-	    $sort=null,
-	    MappingDtoInterface $mappingDto=null,
-	    $delimiter=CsvParser::DEFAULT_DELIMITER
+	    $extension = false, 
+	    $limit = null, 
+	    $sort = null,
+	    MappingDtoInterface $mappingDto = null,
+	    $delimiter = CsvParser::DEFAULT_DELIMITER
 	){
 		$objects = [];
 		$files = (new DirectoryCrawlerService())->directoryContent($this->incomingFolder, $extension, $limit, $sort);
@@ -35,18 +35,37 @@ class ParserService {
 				        break;
 				    
 				    case 'csv':
-				        if (null === $mappingDto)
+				        if (null === $mappingDto) {
 				            throw new MappingDtoDoesNotExistException();
-				            
+				        }
+				        
 				        $fd = fopen($this->incomingFolder.$file,"r");
 				        if(!$fd) {
 				            throw new UnableToOpenFileException($file);
 				        }else{
 				            $lines = [];
 				            while(!feof($fd)){
-				                $lines[] = fgets($fd,500);
+				                $lines[] = fgets($fd, 600);
 				            }
 				            $objects[$file] = (new CsvParser())->parse($lines, $mappingDto, $delimiter);
+				        }
+				        fclose($fd);
+				        break;
+				        
+				    case 'txt':
+				        if (null === $mappingDto) {
+				            throw new MappingDtoDoesNotExistException();
+				        }
+				        
+				        $fd = fopen($this->incomingFolder.$file,"r");
+				        if(!$fd) {
+				            throw new UnableToOpenFileException($file);
+				        }else{
+				            $lines = [];
+				            while(!feof($fd)){
+				                $lines[] = fgets($fd, 600);
+				            }
+				            $objects[$file] = (new TxtParser())->parse($lines, $mappingDto, $delimiter);
 				        }
 				        fclose($fd);
 				        break;
