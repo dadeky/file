@@ -42,7 +42,9 @@ class DirectoryCrawlerService {
 			}
 		}
 			
-		if ($sort) {
+		if ($sort == 'desc') {
+			krsort($filesArr);
+		}elseif ($sort) {
 			ksort($filesArr);
 		}
 			
