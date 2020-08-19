@@ -19,7 +19,8 @@ class ParserService {
 	    $limit = null, 
 	    $sort = null,
 	    MappingDtoInterface $mappingDto = null,
-	    $delimiter = CsvParser::DEFAULT_DELIMITER
+	    $delimiter = CsvParser::DEFAULT_DELIMITER,
+        $linesFromEnd = 0
 	){
 		$objects = [];
 		$files = (new DirectoryCrawlerService())->directoryContent($this->incomingFolder, $extension, $limit, $sort);
@@ -44,9 +45,36 @@ class ParserService {
 				            throw new UnableToOpenFileException($file);
 				        }else{
 				            $lines = [];
-				            while(!feof($fd)){
-				                $lines[] = fgets($fd, 600);
-				            }
+		                            if($linesFromEnd == 0)
+                		            {
+                                		while(!feof($fd)){
+		                                    $lines[] = fgets($fd, 600);
+                		                }
+		                            }
+		                            else
+                		            {
+                                		fseek($fd, -1, SEEK_END);
+		                                $pos = ftell($fd);
+                		                $lastLine = "";
+
+		                                // Loop backword until we have our lines or we reach the start
+                		                while($pos > 0 && count($lines) < $linesFromEnd) {
+
+                                		    $C = fgetc($fd);
+		                                    if($C == "\n") {
+                		                        // skip empty lines
+		                                        if(trim($lastLine) != "") {
+                		                            $lines[] = $lastLine;
+                                		        }
+		                                        $lastLine = '';
+                		                    } else {
+		                                        $lastLine = $C.$lastLine;
+                		                    }
+                                		    fseek($fd, $pos--);
+		                                }
+
+		                                $lines = array_reverse($lines);
+                		            }
 				            $objects[$file] = (new CsvParser())->parse($lines, $mappingDto, $delimiter);
 				        }
 				        fclose($fd);
@@ -62,9 +90,36 @@ class ParserService {
 				            throw new UnableToOpenFileException($file);
 				        }else{
 				            $lines = [];
-				            while(!feof($fd)){
-				                $lines[] = fgets($fd, 600);
-				            }
+		                            if($linesFromEnd == 0)
+		                            {
+		                                while(!feof($fd)){
+		                                    $lines[] = fgets($fd, 600);
+		                               }
+		                            }
+		                            else
+		                            {
+		                                fseek($fd, -1, SEEK_END);
+		                                $pos = ftell($fd);
+		                                $lastLine = "";
+
+		                                // Loop backword until we have our lines or we reach the start
+		                                while($pos > 0 && count($lines) < $linesFromEnd) {
+
+		                                    $C = fgetc($fd);
+		                                    if($C == "\n") {
+		                                        // skip empty lines
+		                                        if(trim($lastLine) != "") {
+		                                            $lines[] = $lastLine;
+		                                        }
+		                                        $lastLine = '';
+		                                    } else {
+		                                        $lastLine = $C.$lastLine;
+		                                    }
+		                                    fseek($fd, $pos--);
+		                                }
+
+		                                $lines = array_reverse($lines);
+		                            }
 				            $objects[$file] = (new TxtParser())->parse($lines, $mappingDto, $delimiter);
 				        }
 				        fclose($fd);
