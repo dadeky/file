@@ -2,3 +2,4 @@ vendor
 composer.lock
 /fetchUpstream.bat
 /update.bat
+.idea
